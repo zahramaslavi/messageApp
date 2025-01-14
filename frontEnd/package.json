@@ -1,0 +1,53 @@
+{
+  "name": "front-end-project",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "webpack serve --open",
+    "build": "webpack",
+    "test": "jest",
+    "clear": "rm -rf node_modules dist && yarn cache clean",
+    "docker build": "docker build -t zahramaslavi/pokemon-project .",
+    "docker run": "docker run -p 3000:3000 zahramaslavi/pokemon-project",
+    "docker-prod-build": "docker build -f Dockerfile.prod -t zahramaslavi/pokemon-project-prod .",
+    "docker-prod-run": "docker run -p 8080:80 zahramaslavi/pokemon-project-prod"
+  },
+  "dependencies": {
+    "@babel/core": "^7.25.2",
+    "@babel/preset-env": "^7.25.4",
+    "@babel/preset-react": "^7.24.7",
+    "@babel/preset-typescript": "^7.24.7",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@mui/icons-material": "^6.3.0",
+    "@mui/material": "^6.3.1",
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.3.0",
+    "axios": "^1.7.7",
+    "babel-loader": "^9.1.3",
+    "css-loader": "^7.1.2",
+    "html-webpack-plugin": "^5.6.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^7.1.1",
+    "style-loader": "^4.0.0",
+    "ts-loader": "^9.5.1",
+    "typescript": "^5.6.2",
+    "webpack": "^5.94.0",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^5.1.0"
+  },
+  "devDependencies": {
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.0.1",
+    "@testing-library/user-event": "^14.5.2",
+    "@types/jest": "^29.5.13",
+    "babel-jest": "^29.7.0",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "react-hook-form": "^7.54.2",
+    "ts-jest": "^29.2.5"
+  }
+}
