@@ -21,7 +21,6 @@ const Register = () => {
   }, [state]);
 
   const handlRegister = async (data: any) => {
-    console.log(data);
     const { email, password } = data;
     reg({email, password});
   }

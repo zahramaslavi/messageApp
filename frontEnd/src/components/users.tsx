@@ -1,13 +1,8 @@
 import React, { useEffect } from "react";
 import { Box, Button, Container, Typography, List, ListItem, ListItemText,  } from "@mui/material";
 import { useAuthContext } from '@/contexts/authContext';
+import { UserI } from "@/models/user";
 
-
-interface User {
-  id: number;
-  name: string;
-  email: string;
-}
 
 const Users: React.FC = () => {
   const { state, getUsers } = useAuthContext();
@@ -22,9 +17,9 @@ const Users: React.FC = () => {
         <Box display="flex" flexDirection="column" alignItems="center">
           <Typography variant="h5" gutterBottom>Users</Typography>
           <List>
-            {state.users.map((user: User) => (
-              <ListItem key={user.email}>
-                <ListItemText primary={user.email}/>
+            {state.users.map((user: UserI) => (
+              <ListItem key={user.username}>
+                <ListItemText primary={user.username}/>
               </ListItem>
             ))}
           </List>

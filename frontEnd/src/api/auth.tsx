@@ -1,29 +1,18 @@
+import { AuthDataI } from "@/models/auth";
 import { authApiClient } from "./apiClient";
 
-// duplicate - move to models
-interface LoginDataI {
-  email?: String,
-  password?: String
-}
-// duplicate
-interface RegisterDataI {
-  name?: String,
-  email?: String,
-  password?: String
-}
 
-export const loginApi = async (loginData: LoginDataI) => {
-  console.log(loginData.email)
+export const loginApi = async (loginData: AuthDataI) => {
   try {
     const res = await authApiClient.post("/login/", loginData);
     return res.data;
-  } catch (error) {
+  } catch (error: any) {
     console.log("Failed to login: ", error);
     throw error;
   }
 }
 
-export const registerApi = async (registerData: RegisterDataI) => {
+export const registerApi = async (registerData: AuthDataI) => {
   try {
     const res = await authApiClient.post("/register/", registerData);
     return res.data;
@@ -39,7 +28,7 @@ export const logoutApi = async () => {
     return res.data;
   } catch(error: any) {
     console.log("Failed to logout: ", error);
-    throw new Error(error.response.data);
+    throw error
   }
 }
 
@@ -48,8 +37,18 @@ export const refreshToken = async () => {
     const res = await authApiClient.post("/token/");
     return res.data;
   } catch(error: any) {
-    console.log("Failed to refres htoken: ", error);
-    throw new Error(error.response.data);
+    console.log("Failed to refresh token: ", error);
+    throw error;
+  }
+}
+
+export const githubLoginCallbackApi = async (code: string) => {
+  try {
+    const res = await authApiClient.get(`/auth/github/callback/${code}`);
+    return res.data;
+  } catch(error: any) {
+    console.log("Failed to login with github: ", error);
+    throw error;
   }
 }
 

@@ -23,6 +23,7 @@ export const verifyAuth = async (req: Request, res: Response, next: NextFunction
       res.status(401).send("You are not loged in!");
     }
   } catch(err) {
+    console.log(err);
     next(err);
   }
 }

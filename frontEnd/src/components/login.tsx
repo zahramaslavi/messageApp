@@ -1,9 +1,10 @@
 import React, {useEffect, useState} from "react";
-import { Box, TextField, Button, Typography } from "@mui/material";
+import { Box, TextField, Button, Typography, CircularProgress } from "@mui/material";
+import GitHubIcon from '@mui/icons-material/GitHub';
 import Grid from "@mui/material/Grid2";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useNavigate } from 'react-router-dom';
+import { useForm } from "react-hook-form";
 import { useAuthContext } from "../contexts/authContext";
-import { AuthDataI } from "@/models/auth";
 
 const Login: React.FC = () => {
   const {
@@ -13,10 +14,16 @@ const Login: React.FC = () => {
     formState: { errors },
   } = useForm()
   const {state, login} = useAuthContext();
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (state.isAuthenticated) {
       reset();
+    }
+
+    if (state.isAuthenticated) {
+      navigate('/users');
     }
   }, [state]);
 
@@ -26,6 +33,13 @@ const Login: React.FC = () => {
     login({email, password});
     reset();
   }
+
+  const handleGithubLoginClick = () => {
+    const GITHUB_OAUTH_URL = `https://github.com/login/oauth/authorize?client_id=Ov23lijqCsoFSay6i7Ku&redirect_uri=http://localhost:3000/auth/github/callback&scope=user:email`;
+
+    setLoading(true);
+    window.location.href = GITHUB_OAUTH_URL;
+  };
 
   return (
       <Box
@@ -74,6 +88,20 @@ const Login: React.FC = () => {
                   </Grid>
                 </Grid>
               </form>
+
+              <Typography variant="h6" gutterBottom>
+                Or authenticate with GitHub
+              </Typography>
+
+              <Button
+                variant="text"
+                color="primary"
+                startIcon={loading ? <CircularProgress size={24} /> : <GitHubIcon />}
+                onClick={handleGithubLoginClick}
+                disabled={loading} // Disable button while loading
+              >
+                {loading ? 'Redirecting...' : 'Continue with GitHub'}
+              </Button>
             </Box>
           )
         }

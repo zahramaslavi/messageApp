@@ -1,11 +1,10 @@
 import React from 'react';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { HashRouter as Router, Route, Routes } from 'react-router';
+import { HashRouter as Router, Route, Routes, BrowserRouter } from 'react-router-dom';
 import TopAppBar from './components/topAppBar';
-import Register from './components/register';
-import Login from './components/login';
-import Users from './components/users';
+import AppRoutes from './appRoutes';
 import AuthError from './components/authError';
+import GithubCallback from './components/githubCallback';
 import './app.css';
 import { AuthProvider } from './contexts/authContext';
 
@@ -28,31 +27,15 @@ const theme = createTheme({
 function App() {
   return (
     <div className="App">
-      <Router>
-        <ThemeProvider theme={theme}>
-          <AuthProvider>
-            <TopAppBar></TopAppBar>
-            
-            <Routes>
-              <Route path="/login" element={
-                <Login></Login>
-              }>
-              </Route>
-
-              <Route path="/register" element={
-                <Register></Register>
-              }>
-              </Route>
-
-              <Route path="/users" element={
-                <Users></Users>
-              }>
-              </Route>
-            </Routes>
-            <AuthError></AuthError>
-          </AuthProvider>
-        </ThemeProvider>
-      </Router>
+      <BrowserRouter>
+          <ThemeProvider theme={theme}>
+            <AuthProvider>
+              <TopAppBar></TopAppBar>
+              <AppRoutes></AppRoutes>
+              <AuthError></AuthError>
+            </AuthProvider>
+          </ThemeProvider>
+      </BrowserRouter>
     </div>
   );
 }

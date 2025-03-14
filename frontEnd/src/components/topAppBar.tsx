@@ -13,45 +13,41 @@ const TopAppBar = () => {
   const {state, logout} = useAuthContext();
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static">
-        <Toolbar>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-            sx={{ mr: 2 }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            General
-          </Typography>
-
-          {!state.isAuthenticated && (
-            <Button color="inherit"><Link to="/Login" style={{ color: "#FFF", textDecoration: "none" }}>Login</Link></Button>
-          )}
-
-          {!state.email && (
-            <Button color="inherit"><Link to="/Register" style={{ color: "#FFF", textDecoration: "none" }}>Register</Link></Button>
-          )}
-
-          {state.isAuthenticated && state.email &&
-            <Button color="inherit">{state.email}</Button>
-          }
-
+    <AppBar position="sticky">
+      <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
+        {/* Left side - General links */}
+        <Box>
           {state.isAuthenticated && (
-            <Button color="inherit" onClick={logout}>Logout</Button>
+            <Button color="inherit"><Link to="/chat" style={{ color: "#FFF", textDecoration: "none" }}>Chat</Link></Button>
           )}
 
           {state.isAuthenticated && (
             <Button color="inherit"><Link to="/Users" style={{ color: "#FFF", textDecoration: "none" }}>Users</Link></Button>
           )}
-          
-        </Toolbar>
-      </AppBar>
-    </Box>
+        </Box>
+        
+        {/* Right side - Auth and user links */}
+        <Box>
+          {!state.isAuthenticated && (
+            <Button color="inherit"><Link to="/Login" style={{ color: "#FFF", textDecoration: "none" }}>Login</Link></Button>
+          )}
+
+          {!state.username && (
+            <Button color="inherit"><Link to="/Register" style={{ color: "#FFF", textDecoration: "none" }}>Register</Link></Button>
+          )}
+
+          {state.isAuthenticated && (
+            <Button color="inherit" onClick={logout}>Logout</Button>
+          )}
+
+          {state.isAuthenticated && state.username &&
+            <Button color="inherit">{state.username}</Button>
+          }
+
+        </Box>
+        
+      </Toolbar>
+    </AppBar>
   );
 }
 

@@ -26,16 +26,16 @@ app.use(bodyParser.json());
 
 app.use("/", routes);
 
-app.use((req: Request, res: Response, next: NextFunction) => {
-  next(createError(404));
-});
-
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
   res.status(err.status || 500);
   res.send();
 });
 
 let server: any = null;
+
+app.use((req: Request, res: Response, next: NextFunction) => {
+  next(createError(404));
+});
 
 export const startServer = async () => {
   try {

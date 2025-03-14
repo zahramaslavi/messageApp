@@ -1,15 +1,13 @@
 import { Request, Response, NextFunction } from "express";
-import jwt from "jsonwebtoken";
 import User from "../models/user";
-import 'dotenv/config';
 
-export const general = async (req: Request, res: Response, next: NextFunction) => {
+export const getUsers = async (req: Request, res: Response, next: NextFunction) => {
   try {
 
-    const usrs = await User.find();
+    const usrs = await User.find().select("-messages").exec();
 
     if (usrs) {
-      res.send(usrs);
+      res.send([...usrs]);
     } else {
       res.status(404).send("No user found")
     }      

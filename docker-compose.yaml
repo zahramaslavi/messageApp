@@ -28,15 +28,15 @@ services:
       - mongo
     networks:
       - app-network
-  general:
+  message:
     build:
-      context: ./generalService
-    container_name: general-service
+      context: ./messageService
+    container_name: message-service
     restart: always
     ports:
       - "3002:3002"
     volumes:
-      - ./generalService:/usr/app
+      - ./messageService:/usr/app
       - /usr/app/node_modules
     environment:
       - MONGO_URL=${MONGO_URL}
@@ -60,7 +60,7 @@ services:
     depends_on:
       - mongo
       - auth
-      - general
+      - message
     networks:
       - app-network
 
