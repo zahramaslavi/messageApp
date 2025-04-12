@@ -5,20 +5,22 @@ import {
   REGISTER,
   LOGIN,
   LOGOUT,
-  ERROR_MESSAGE,
   GET_USERS,
   CHECK_AUTH,
   registerAction,
   loginAction,
   logoutAction,
-  errorMessageAction,
   getUsersAction,
   checkAuthAction
-} from "./authAction";
+} from "./actions/authAction";
+import { 
+  ERROR_MESSAGE,
+  errorMessageAction,
+} from "./actions/errorAction";
 import { registerApi, loginApi, logoutApi, refreshToken, githubLoginCallbackApi } from "@/api/auth";
 import { fetchUsers } from "@/api/message";
 import { UserI } from "@/models/user";
-import errorCodes from "./errorCode";
+import { getFriendlyErrorData } from "./helper/errorHelper";
 
 const initialState: AuthInitStateI = {
   email: null,
@@ -28,7 +30,6 @@ const initialState: AuthInitStateI = {
   refresh_token: null,
   errorStatus: null,
   errorMessage: null,
-  users: []
 }
 
 const reducer = (state: AuthInitStateI ,action: ActionI) => {
@@ -41,8 +42,6 @@ const reducer = (state: AuthInitStateI ,action: ActionI) => {
       return {...state, username: null, email: null, isAuthenticated: false}
     case ERROR_MESSAGE:
       return {...state, errorMessage: action.payload.message, errorStatus: action.payload.status}
-    case GET_USERS:
-      return {...state, users: action.payload.users}
     case CHECK_AUTH:
       return {...state, checkingAuth: action.payload.checkingAuth}
     default:
@@ -96,7 +95,6 @@ export const AuthProvider: React.FC<ProviderProps> = ({children}) => {
   const login = async (authData: AuthDataI) => {
     try {
       const res = await loginApi(authData);
-      console.log("|||||||||||||||", res);
       if (res.success && res.success.user) {
         handleLoginInContext(res.success.user);
       }
@@ -152,34 +150,7 @@ export const AuthProvider: React.FC<ProviderProps> = ({children}) => {
     dispatch(errorMessageAction({message: null, status: null}));
   }
 
-  //Todo: move this to a helper and possibly extend the error handlling to a more modular way
-  const getFriendlyErrorData = (error: any) => {
-    let message = "";
-    let status = null;
-
-    if (error?.response?.data?.error?.message) {
-      message = error?.response?.data?.error?.message;
-    } else if ( error.code && errorCodes[error.code] ) {
-      message = errorCodes[error.code].friendlyMessage;
-    } else {
-      message = "Something went wrong - try again or contact support";
-    }
-
-    status = error.status;
-
-    return {message, status};
-  }
-
-  const getUsers = async () => { 
-    try {
-      const users = await fetchUsers();
-      dispatch(getUsersAction({users}));
-    } catch (error) {
-      console.log("Error while fetching users");
-    }
-  }
-
-  return <AuthContext.Provider value={{state, login, logout, reg, clearError, getUsers, githubCallback}}>{children}</AuthContext.Provider>
+  return <AuthContext.Provider value={{authState: state, login, logout, reg, clearError, githubCallback}}>{children}</AuthContext.Provider>
 }
 
 export const useAuthContext = () => {

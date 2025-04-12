@@ -4,12 +4,11 @@ import { MessageI } from "@/models/message";
 import { UserI } from "@/models/user";
 
 interface MessageBoxPropsI {
-  i: number,
   msg: MessageI,
   userFrom: UserI,
 }
 
-const MessageBox = forwardRef(({i, msg, userFrom}: MessageBoxPropsI, ref: ForwardedRef<HTMLLIElement>|null) => {
+const MessageBox = forwardRef(({msg, userFrom}: MessageBoxPropsI, ref: ForwardedRef<HTMLLIElement>|null) => {
   const messageRef = useRef<HTMLLIElement | null>(null);
   
   useEffect(() => {
@@ -20,7 +19,6 @@ const MessageBox = forwardRef(({i, msg, userFrom}: MessageBoxPropsI, ref: Forwar
 
   return (
     <ListItem 
-      key={i}
       sx={{ justifyContent: msg.sender === userFrom._id ? "flex-end" : "flex-start" }}
       ref={ref}
     >

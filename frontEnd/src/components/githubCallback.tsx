@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from '@/contexts/authContext';
 
 const GithubCallback = () => { 
-  const {state, githubCallback} = useAuthContext();
+  const { authState, githubCallback } = useAuthContext();
   const navigate = useNavigate();
   
   useEffect(() => {
@@ -18,15 +18,14 @@ const GithubCallback = () => {
   }, []);
 
   useEffect(() => {
-    console.log(state)
-    if (state.isAuthenticated) {
-      navigate('/users');
+    if (authState.isAuthenticated) {
+      navigate('/chat');
     }
 
-    if (state.errorMessage) {
-      console.log(state.errorMessage, state.errorStatus)
+    if (authState.errorMessage) {
+      console.log(authState.errorMessage, authState.errorStatus)
     }
-  }, [state]);
+  }, [authState]);
   
   return (<Box>
     <Typography variant="h5" gutterBottom>

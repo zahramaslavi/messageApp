@@ -7,9 +7,10 @@ import Users from './components/users';
 import Chat from './components/chat';
 import GithubCallback from './components/githubCallback';
 import { useAuthContext } from './contexts/authContext';
+import { MessageProvider } from './contexts/messageContext';
 
 const AppRoutes = () => {
-  const { state } = useAuthContext();
+  const { authState } = useAuthContext();
 
   return (
     <Routes>
@@ -30,14 +31,18 @@ const AppRoutes = () => {
 
       <Route element={<ProtectedRoute />}>
         <Route path="/users" element={
-          <Users></Users>
+          <MessageProvider>
+            <Users></Users>
+          </MessageProvider>
         }>
         </Route>
       </Route>
       
       <Route element={<ProtectedRoute />}>
         <Route path="/chat" element={
-          <Chat></Chat>
+          <MessageProvider>
+            <Chat></Chat>
+          </MessageProvider>
         }>
         </Route>
       </Route>

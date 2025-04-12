@@ -3,13 +3,13 @@ import { Alert, IconButton} from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 
 const AuthError = () => {
-  const {state, clearError} = useAuthContext();
+  const {authState, clearError} = useAuthContext();
 
   return (<>
     {
-      state.errorMessage &&
+      authState.errorMessage &&
       <Alert severity="error" sx={{alignItems: "center"}}>
-        {state.errorMessage}
+        {authState.errorMessage}
         <IconButton aria-label="close" onClick={clearError}>
           <CloseIcon />
         </IconButton>

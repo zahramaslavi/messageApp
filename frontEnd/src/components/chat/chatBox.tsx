@@ -1,48 +1,42 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Box, TextField, Typography, IconButton, List } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import { useAuthContext } from "@/contexts/authContext";
 import { UserI } from "@/models/user";
-import { MessageI } from "@/models/message";
-import { fetchMessages, sendMessage } from "@/api/message";
 import MessageBox from "./messageBox";
+import LastSeen from "./lastSeen";
+import { useMessageContext } from "@/contexts/messageContext";
 
-interface ChatBoxPropsI {
-  userFrom: UserI,
-  userTo: UserI
-}
-
-const ChatBox = ({userFrom, userTo}: ChatBoxPropsI) => {
+const ChatBox = () => {
   const messageRef = useRef<HTMLLIElement>(null);
   const [ message, setMessage ] = useState("");
-  const [ messages, setMessages ] = useState<MessageI[]>([]);
-  const { state } = useAuthContext();
+  const { authState } = useAuthContext();
+  const { messageState, addMessage, selectCurrentChat, getCurrentChatMessages, getUsers, setLastSeen, clearError } = useMessageContext();
 
   useEffect(() => {
-    console.log(state.isAuthenticated)
-    const getMessages = async () => {
-      const fetchedMessages = await fetchMessages(userFrom._id);
-      console.log(fetchedMessages);
+    getCurrentChatMessages();
 
-      if (fetchedMessages.length) {
-        setMessages(fetchedMessages);
+    return () => {
+      if (messageState.currentChatMessages.length) {
+        const lastMessageIndex = messageState.currentChatMessages.length - 1;
+        setLastSeen(messageState.currentChatMessages[lastMessageIndex]._id as string)
       }
     }
-
-    getMessages();
   }, []);
 
   useEffect(() => {
-    console.log(messages);
     messageRef.current?.scrollIntoView({behavior: "smooth"});
-  }, [messages]);
+  }, [messageState.currentChatMessages]);
 
   const handleSendMessage = async () => {
     if (message.trim() === "") return;
-
-    const newMessage = await sendMessage(userFrom._id, message, userTo._id);
-    setMessages([...messages, newMessage]);
+    await addMessage(message);
     setMessage("");
+  }
+
+  const handleMarkAsRead = async () => {
+    const lastMessageIndex = messageState.currentChatMessages.length - 1; 
+    setLastSeen(messageState.currentChatMessages[lastMessageIndex]._id as string)
   }
   
   return (
@@ -51,13 +45,16 @@ const ChatBox = ({userFrom, userTo}: ChatBoxPropsI) => {
         margin: 4
       }}
     >
-      {state.isAuthenticated && 
+      {
+        authState.isAuthenticated &&
+        messageState.currentChatUserFrom &&
+        messageState.currentChatUserTo &&
         ( 
           <Box 
             sx={{display: "flex", flexDirection: "column", alignItems: "center"}}
           >
             <Typography variant="h5" gutterBottom>
-              {`Chat with ${userTo.username}`} 
+              {`Chat with ${messageState.currentChatUserTo.username}`} 
             </Typography>
             <Box 
               sx={{ 
@@ -79,18 +76,31 @@ const ChatBox = ({userFrom, userTo}: ChatBoxPropsI) => {
                   scrollbarWidth: "none", // Hide scrollbar in Firefox
                 }}
               >
-                {messages.length == 0 && "Start chatting"}
+                {messageState.currentChatMessages.length == 0 && "Start chatting"}
                 { 
-                  messages.length > 0 &&
+                  messageState.currentChatMessages &&
+                  messageState.currentChatMessages.length > 0 &&
+                  messageState.currentChatUserFrom &&
                   <List>
-                    {messages.map((msg, index) => (
+                    {messageState.currentChatMessages.map((msg, index) => { return (
                       <MessageBox
-                        i={index}
+                        key={index}
                         msg={msg}
-                        userFrom={userFrom}
-                        ref={index == messages.length - 1 ? messageRef : null}
+                        userFrom={messageState.currentChatUserFrom as UserI}
+                        ref={messageState.currentChatLastSeen == msg._id ? messageRef : null}
                       ></MessageBox>
-                    ))}
+                        /* {
+                          messageState.currentChatLastSeen &&
+                          messageState.currentChatLastSeen == msg._id &&
+                          messageState.currentChatMessages.length - index - 1 >= 1 &&
+                          <LastSeen
+                            key={"lastSeen"}
+                            notSeenNum={messageState.currentChatMessages.length - index - 1}
+                            markAsRead={handleMarkAsRead}
+                          ></LastSeen>} */
+                      
+                      )}
+                    )}
                   </List>
                 }
               </Box>
@@ -114,7 +124,7 @@ const ChatBox = ({userFrom, userTo}: ChatBoxPropsI) => {
         )
       } 
 
-      {!state.isAuthenticated && (
+      {!authState.isAuthenticated && (
           <Typography variant="h4" gutterBottom>
             You are not authenticated!
           </Typography>

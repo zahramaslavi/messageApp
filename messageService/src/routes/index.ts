@@ -5,7 +5,8 @@ import {
     // getMessage,
     saveMessage,
     // deleteMessage,
-    // editMessage
+    // editMessage,
+    saveLastread
 } from "../controllers/message";
 
 const routes = Router();
@@ -17,5 +18,7 @@ routes.get("/users/:id/messages", getMessages);
 routes.post("/users/:id/messages", saveMessage);
 // routes.delete("/users/:id/messsages/:messageId", deleteMessage);
 // routes.put("/users/:id/messsages/:messageId", editMessage);
+
+routes.post("/users/:id/lastRead", saveLastread);
 
 export default routes;

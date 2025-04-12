@@ -4,6 +4,7 @@
 .pnp.js
 
 private.pem
+public.pem
 
 # testing
 /coverage

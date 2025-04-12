@@ -1,5 +1,3 @@
-import { UserI } from "./user"
-
 export interface AuthDataI {
   email?: string,
   password?: string
@@ -14,16 +12,14 @@ export interface AuthInitStateI {
   refresh_token: string | null,
   errorStatus: null | number,
   errorMessage: null | String,
-  users: UserI[]
 }
 
 export interface AuthContextI {
-  state: AuthInitStateI
+  authState: AuthInitStateI
   reg: (authData: AuthDataI) => void,
   login: (authData: AuthDataI) => void,
   logout: () => void,
   clearError: () => void,
-  getUsers: () => void,
   githubCallback: (code: string) => void
 }
 

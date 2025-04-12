@@ -10,38 +10,38 @@ import { Link } from "react-router-dom";
 import { useAuthContext } from "../contexts/authContext";
 
 const TopAppBar = () => {
-  const {state, logout} = useAuthContext();
+  const { authState, logout } = useAuthContext();
 
   return (
     <AppBar position="sticky">
       <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
         {/* Left side - General links */}
         <Box>
-          {state.isAuthenticated && (
+          {authState.isAuthenticated && (
             <Button color="inherit"><Link to="/chat" style={{ color: "#FFF", textDecoration: "none" }}>Chat</Link></Button>
           )}
 
-          {state.isAuthenticated && (
+          {authState.isAuthenticated && (
             <Button color="inherit"><Link to="/Users" style={{ color: "#FFF", textDecoration: "none" }}>Users</Link></Button>
           )}
         </Box>
         
         {/* Right side - Auth and user links */}
         <Box>
-          {!state.isAuthenticated && (
+          {!authState.isAuthenticated && (
             <Button color="inherit"><Link to="/Login" style={{ color: "#FFF", textDecoration: "none" }}>Login</Link></Button>
           )}
 
-          {!state.username && (
+          {!authState.username && (
             <Button color="inherit"><Link to="/Register" style={{ color: "#FFF", textDecoration: "none" }}>Register</Link></Button>
           )}
 
-          {state.isAuthenticated && (
+          {authState.isAuthenticated && (
             <Button color="inherit" onClick={logout}>Logout</Button>
           )}
 
-          {state.isAuthenticated && state.username &&
-            <Button color="inherit">{state.username}</Button>
+          {authState.isAuthenticated && authState.username &&
+            <Button color="inherit">{authState.username}</Button>
           }
 
         </Box>

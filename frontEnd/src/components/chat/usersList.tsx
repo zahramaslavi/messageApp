@@ -10,7 +10,7 @@ interface UsersListI {
 }
 
 const UsersList = ({users, loading, startChatWith}: UsersListI) => {
-  const { state } = useAuthContext();
+  const { authState } = useAuthContext();
   return (
     <Container sx={{marginTop: 6}}>
       {loading && (<Typography variant="h5" gutterBottom>Loading friends</Typography>)}
@@ -22,7 +22,7 @@ const UsersList = ({users, loading, startChatWith}: UsersListI) => {
           <Typography variant="h5" gutterBottom>Friends</Typography>
           <List>
             {users.map((user: UserI) => {
-              if ( user.username == state.username ) return null;
+              if ( user.username == authState.username ) return null;
 
               return (
                 <ListItem 

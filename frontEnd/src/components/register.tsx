@@ -1,7 +1,7 @@
-import React, {useState, useEffect} from "react";
+import React, {useEffect} from "react";
 import { Box, TextField, Button, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid2";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { useAuthContext } from "@/contexts/authContext";
 import { Link } from "react-router-dom";
 
@@ -12,13 +12,13 @@ const Register = () => {
     reset,
     formState: { errors },
   } = useForm();
-  const {state, reg} = useAuthContext();
+  const {authState, reg} = useAuthContext();
 
   useEffect(() => {
-    if (state.email) {
+    if (authState.email) {
       reset();
     }
-  }, [state]);
+  }, [authState]);
 
   const handlRegister = async (data: any) => {
     const { email, password } = data;
@@ -32,7 +32,7 @@ const Register = () => {
       }}
     >
       {
-        !state.email && !state.isAuthenticated && 
+        !authState.email && !authState.isAuthenticated && 
         <Box sx={{display: "flex", flexDirection: "column"}}>
           <Typography variant="h5" gutterBottom>
             Register Form
@@ -75,9 +75,9 @@ const Register = () => {
         </Box>
       }
 
-      {state.email && !state.isAuthenticated && (
+      {authState.email && !authState.isAuthenticated && (
         <Typography variant="h4" gutterBottom>
-            You are registered {state.email}. Please <Link to="/Login">Login</Link>!
+            You are registered {authState.email}. Please <Link to="/Login">Login</Link>!
         </Typography>
       )}      
     </Box>

@@ -5,7 +5,9 @@ export interface UserI extends Document {
   email: string,
   username: string,
   password: string,
-  messages: MessageI[]
+  messages: MessageI[],
+  lastReadMessage: MessageI,
+  refreshToken: string,
 }
 
 // Define the interface for the User model (including static methods)
@@ -23,7 +25,19 @@ const userSchema = new Schema<UserI>({
   messages: [{
     type: Schema.Types.ObjectId,
     ref: "Message"
-  }]
+  }],
+  lastReadMessage: {
+    type: Schema.Types.ObjectId,
+    ref: "Message"
+  },
+  password: { 
+    type: String,
+    select: false 
+  }, // Always excluded
+  refreshToken: { 
+    type: String,
+    select: false
+  } // Always excluded
 }, {timestamps: true});
 
 const User = mongoose.model<UserI, IUserModel>("user", userSchema)

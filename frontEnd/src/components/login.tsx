@@ -13,19 +13,19 @@ const Login: React.FC = () => {
     reset,
     formState: { errors },
   } = useForm()
-  const {state, login} = useAuthContext();
+  const {authState, login} = useAuthContext();
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (state.isAuthenticated) {
+    if (authState.isAuthenticated) {
       reset();
     }
 
-    if (state.isAuthenticated) {
-      navigate('/users');
+    if (authState.isAuthenticated) {
+      navigate('/chat');
     }
-  }, [state]);
+  }, [authState]);
 
   const handlLogin = async (data: any) => {
     console.log(data);
@@ -47,7 +47,7 @@ const Login: React.FC = () => {
           margin: 4
         }}
       >
-        {!state.isAuthenticated && 
+        {!authState.isAuthenticated && 
           ( 
             <Box sx={{display: "flex", flexDirection: "column"}}>
               <Typography variant="h5" gutterBottom>
@@ -106,9 +106,9 @@ const Login: React.FC = () => {
           )
         }
 
-        {state.email && state.isAuthenticated && (
+        {authState.email && authState.isAuthenticated && (
             <Typography variant="h4" gutterBottom>
-                You are signed in {state.email}
+                You are signed in {authState.email}
             </Typography>
         )}
       </Box>

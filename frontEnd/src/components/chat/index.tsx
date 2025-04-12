@@ -4,22 +4,28 @@ import UsersList from "./usersList";
 import { UserI } from "@/models/user";
 import { useAuthContext } from "@/contexts/authContext";
 import ChatBox from "./chatBox";
+import { useMessageContext } from "@/contexts/messageContext";
 
 const sidebarWidth = 200;
 
 const Chat = () => {
-  const [ chatWith, setChatWith ] = useState<UserI|null>(null);
-  const [ chatFrom, setChatFrom ] = useState<UserI|null>(null);
-  const { state, getUsers } = useAuthContext();
+  const { messageState, getUsers, selectCurrentChat } = useMessageContext();
+  const { authState } = useAuthContext();
   
   useEffect(() => {
     getUsers();
   }, []);
 
-  const handleStartChatWith = (user: UserI) => {
-    setChatWith(user);
-    const fromUser = state.users.find(user => user.username == state.username)
-    setChatFrom(fromUser ? fromUser : null);
+  useEffect(() => {
+    console.log("message: ", messageState)
+  }, [messageState])
+
+  const handleStartChatWith = (toUser: UserI) => {
+    const fromUser = messageState.users.find(user => user.username == authState.username);
+    
+    if (fromUser) {
+      selectCurrentChat(fromUser, toUser)
+    }
   }
 
   return (
@@ -35,18 +41,14 @@ const Chat = () => {
           flexDirection: "column",
         }}
       >
-        <UsersList users={state.users} loading={false} startChatWith={handleStartChatWith}></UsersList>
+        <UsersList users={messageState.users} loading={false} startChatWith={handleStartChatWith}></UsersList>
       </Box>
 
       {/* Main Content Area */}
       <Box sx={{ flexGrow: 1, p: 3 }}>
-        {chatWith && chatFrom &&
-          <ChatBox
-            userFrom={chatFrom} 
-            userTo={chatWith}
-          ></ChatBox>
+        {messageState.currentChatUserFrom && messageState.currentChatUserTo &&
+          <ChatBox></ChatBox>
         }
-        
       </Box>
     </Box>
   );

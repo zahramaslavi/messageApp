@@ -1,6 +1,6 @@
 export interface MessageI {
-    _id?: number,
+    _id?: string,
     text: string,
-    sender: number,
+    sender: string,
     time?: string
 }
